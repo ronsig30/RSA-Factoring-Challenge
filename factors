@@ -1,31 +1,30 @@
 #!/usr/bin/python3
-
 import sys
 
-def factorize_number():
-    """
-    This function reads a file and factors numbers in the format n = p * q.
-    It prints the factors of the given numbers.
-    """
+def factorize():
     try:
+        if len(sys.argv) != 2:
+            print("Usage: factors <file>")
+            return
+
         input_file = sys.argv[1]
         with open(input_file) as file:
             for line in file:
                 number = int(line)
-                if number % 2 == 0:
-                    print("{} = {} * {}".format(number, number // 2, 2))
-                    continue
-                divisor = 3
-                while divisor < number // 2:
-                    if number % divisor == 0:
-                        print("{} = {} * {}".format(number, number // divisor,
-                        divisor))
-                        break
-                    divisor += 2
-                if divisor == (number // 2) + 1:
-                    print("{} = {} * {}".format(number, number, 1))
-    except (IndexError, FileNotFoundError):
-        pass
+                factors = find_factors(number)
+                print(f"{number} = {factors[0]} * {factors[1]}")
 
-factorize_number()
+    except (IndexError, FileNotFoundError):
+        print("Usage: factors <file>")
+    except (ValueError, ZeroDivisionError):
+        print("Invalid input in the file.")
+
+def find_factors(number):
+    for i in range(2, number // 2 + 1):
+        if number % i == 0:
+            return (i, number // i)
+    return (number, 1)
+
+if __name__ == "__main__":
+    factorize()
 
